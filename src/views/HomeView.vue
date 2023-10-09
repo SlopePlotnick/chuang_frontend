@@ -216,50 +216,15 @@
 <script>
 import { reactive, ref } from 'vue';
 import router from '../router/index';
+import { useStore } from 'vuex';
 
 export default {
     name: 'HomeView',
 
     setup: () => {
-        let classifications = ref([
-            {
-                class_name: 'sports',
-                id: 1,
-                passages: [
-                    {
-                        id: 1,
-                        title: 't1',
-                        content: 'aslidhaklsjdhkasjhdfkljashdkflhasldf',
-                    },
-                    {
-                        id: 2,
-                        title: 't2',
-                        content: 'kjhblkjhfiauhsifhpaioufiuhlihuiouhadslfihls',
-                    },
-                    {
-                        id: 3,
-                        title: 't3',
-                        content: 'ojnasciujsedlifuhasdkjfhlihuasdifhasdilfkuh',
-                    },
-                ]
-            },
-            {
-                class_name: 'ecology',
-                id: 2,
-                passages: [
-                    {
-                        id: 1,
-                        title: 't1',
-                        content: 'iuyweihkasjhckljsdlkfiahjdslk',
-                    },
-                    {
-                        id: 2,
-                        title: 't2',
-                        content: 'adpsoiodsaihfo;siadfishjdfoijhs',
-                    },
-                ]
-            },
-        ]);
+        const store = useStore();
+
+        let classifications = ref(store.state.user.data);
 
         // 当前类下所有的文章
         let current_passages = ref([]);

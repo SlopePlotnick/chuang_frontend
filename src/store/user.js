@@ -6,6 +6,7 @@ const ModuleUser = {
         user: {
             id: "",
             username: "",
+            data: [],
             // photo: "",
             // followerCount: 0,
             // access: "",
@@ -23,6 +24,7 @@ const ModuleUser = {
         updateUser: (state, user) => {
             state.id = user.id;
             state.username = user.username;
+            state.data = user.data;
             // state.photo = user.photo;
             // state.followerCount = user.followerCount;
             // state.access = user.access;
@@ -37,6 +39,7 @@ const ModuleUser = {
         logout: (state) => {
             state.id = "";
             state.username = "";
+            state.data = [];
             // state.photo = "";
             // state.followerCount = 0;
             // state.access = "";
