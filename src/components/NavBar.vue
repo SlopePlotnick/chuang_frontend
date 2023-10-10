@@ -7,7 +7,7 @@
     通过:to绑定to属性 然后在大括号内(注意大括号用引号包含)写入name参数即可绑定页面
     name取值貌似可以用单引号或双引号包含字符串
     注意name的取值要与路由中的定义一致 -->
-            <router-link v-if="$store.state.user.is_login" class="navbar-brand"
+            <router-link v-if="!$store.state.user.is_login" class="navbar-brand"
                 :to="{ name: 'userprofile' }">我的信息</router-link>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
                 aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,11 +16,11 @@
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <router-link v-if="$store.state.user.is_login" class="nav-link"
+                        <router-link v-if="!$store.state.user.is_login" class="nav-link"
                             :to="{ name: 'home' }">首页</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link v-if="$store.state.user.is_login" class="nav-link"
+                        <router-link v-if="!$store.state.user.is_login" class="nav-link"
                             :to="{ name: 'addfile' }">添加文件</router-link>
                     </li>
                 </ul>
