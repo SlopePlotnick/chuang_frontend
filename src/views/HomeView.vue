@@ -1,6 +1,6 @@
 <template>
     <!-- 如果登陆成功 展示首页 -->
-    <div v-if="!$store.state.user.is_login" class="container">
+    <div v-if="$store.state.user.is_login" class="container">
         <div class="row">
             <!-- 左栏 -->
             <div class="col-3" style="background-color: rgb(248, 249, 250);
@@ -251,11 +251,11 @@ export default {
 
         //展示具体文章事件 同时使用类id和文章id进行查找 保证结果唯一
         const display_one_pas = (pas_id) => {
-            console.log('执行display_one_pas')
-            console.log('当前类id为');
-            console.log(current_class_id.value);
-            console.log('当前文章id为');
-            console.log(pas_id)
+            // console.log('执行display_one_pas')
+            // console.log('当前类id为');
+            // console.log(current_class_id.value);
+            // console.log('当前文章id为');
+            // console.log(pas_id)
             // 此处应该是根据api对文本内容进行返回？
             // 这里写的是直接对内容进行查找返回的结果
             for (let i = 0; i < classifications.value.length; i++) {
@@ -271,8 +271,8 @@ export default {
                 }
             }
 
-            console.log('当前one_passage为');
-            console.log(one_passage);
+            // console.log('当前one_passage为');
+            // console.log(one_passage);
         };
 
         const jumpToAdd = () => {

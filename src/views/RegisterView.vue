@@ -49,7 +49,7 @@ export default {
             error_message.value = "";
 
             $.ajax({
-                url: 'http://114.222.101.161:8000/register',
+                url: 'http://192.168.43.171:8000/register',
                 type: "POST",
                 data: {
                     username: username.value,

@@ -53,7 +53,7 @@ const ModuleUser = {
         login: (context, data) => {
             $.ajax({
                 //下面是获取token信息
-                url: 'http://114.222.101.161:8000/login',
+                url: 'http://192.168.43.171:8000/login',
                 type: "POST",
                 //注意这里的data类似于关键字 用来存储ajax调用api时需要传入的参数
                 // 而上面的data是传入给login函数的参数 两者完全不同
