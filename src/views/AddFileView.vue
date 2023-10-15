@@ -1,75 +1,41 @@
 <template>
-    <div class="mb-3">
-        <label for="formFile" class="form-label">上传文件</label>
-        <input @change="upload" class="form-control" type="file" id="formFile" name="filename">
+    <div class="card">
+        <div class="card-body">
+            <input type="file" name="file" id="file" multiple class="file-loading" />
+        </div>
     </div>
 </template>
 
-<script>
-// import { ref } from 'vue';
+<script type="text/javascript">
 import $ from 'jquery';
-import { useStore } from 'vuex';
-import axios from 'axios';
+// import { useStore } from 'vuex';
+// import axios from 'axios';
 // import { ref } from 'vue';
+
+// $(function () {
+//     FileInput('#file', '../assets')
+// });
 
 export default {
     name: 'AddFileView',
     setup: () => {
-        // const ipt = ref();
-        const store = useStore();
-        const upload = (e) => {
-            // var that = this;
-            const files = Array.from(e.target.files);
-            var file = files[0];
-            console.log(files[0]);
-
-            const formData = new FormData();
-            formData.append('file', file);
-            console.log(formData.get('file'));
-
-            $.ajax({
-                url: 'http://192.168.43.171:8000/uploadfile',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    transformRequest: [file => file],
-                },
-
-                success: (resp) => {
-                    if (resp.result === 'success') {
-                        console.log('上传成功');
-                    } else {
-                        console.log('api调用成功 上传文件失败');
-                    }
-                },
-                error: () => {
-                    console.log('api调用失败');
-                }
+        $(document).ready(function () {
+            $('#file').fileinput({
+                // language: 'zh',     //设置语言
+                dropZoneEnabled: true,      //是否显示拖拽区域
+                dropZoneTitle: "将文件拖到此处上传",    //拖拽区域显示文字
+                uploadUrl: '../assets',  //上传路径
+                // allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],   //指定上传文件类型
+                minFileSize: 0,
+                maxFileSize: 2048,   //上传文件最大值，单位kb
+                uploadAsync: true,  //异步上传
+                maxFileCount: 1,   //上传文件最大个数。
+                enctype: 'multipart/form-data',
+            }).on("fileuploaded", function (event, data) { //异步上传成功后回调
+                console.log(data);		//data为返回的数据
             });
-
-            // axios({
-            //     method: "post",
-            //     url: "http://192.168.43.171:8000/uploadfile",
-            //     data: formData,
-            //     headers: {
-            //         "Content-Type": "multipart/form-data",
-            //         transformRequest: [file => file],
-            //     }
-            // }).then((resp) => {
-            //     console.log('resp.result');
-            //     console.log(resp.result);
-            // })
-        };
-
-        return {
-            upload,
-            store,
-            // ipt,
-        };
-    }
+        })
+    },
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
     <!-- 如果登陆成功 展示首页 -->
-    <div v-if="$store.state.user.is_login" class="container">
+    <div v-if="!$store.state.user.is_login" class="container">
         <div class="row">
             <!-- 左栏 -->
             <div class="col-3" style="background-color: rgb(248, 249, 250);
