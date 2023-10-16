@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { toRaw } from 'vue';
 // import jwt_decode from "jwt-decode";
 
 const ModuleUser = {
@@ -6,7 +7,46 @@ const ModuleUser = {
         user: {
             id: "",
             username: "",
-            data: [],
+            //这里为了测试拟造了数据
+            data: [
+                {
+                    class_name: 'sports',
+                    id: 1,
+                    passages: [
+                        {
+                            id: 1,
+                            title: 't1',
+                            content: 'aslidhaklsjdhkasjhdfkljashdkflhasldf',
+                        },
+                        {
+                            id: 2,
+                            title: 't2',
+                            content: 'kjhblkjhfiauhsifhpaioufiuhlihuiouhadslfihls',
+                        },
+                        {
+                            id: 3,
+                            title: 't3',
+                            content: 'ojnasciujsedlifuhasdkjfhlihuasdifhasdilfkuh',
+                        },
+                    ]
+                },
+                {
+                    class_name: 'ecology',
+                    id: 2,
+                    passages: [
+                        {
+                            id: 1,
+                            title: 't1',
+                            content: 'iuyweihkasjhckljsdlkfiahjdslk',
+                        },
+                        {
+                            id: 2,
+                            title: 't2',
+                            content: 'adpsoiodsaihfo;siadfishjdfoijhs',
+                        },
+                    ]
+                },
+            ],
             // photo: "",
             // followerCount: 0,
             // access: "",
@@ -30,6 +70,39 @@ const ModuleUser = {
             // state.access = user.access;
             // state.refresh = user.refresh;
             state.is_login = user.is_login;
+        },
+        //此处写法因为没有和后端统一所以存疑 需不需要加user
+        updateData: (state, attr) => {
+            let list = toRaw(state.user.data);
+            let is_in = false;
+            for (let cls of list) {
+                if (attr.channelName === cls.class_name) {
+                    cls.passages.push({
+                        id: cls.passages.length + 1,
+                        title: attr.title,
+                        content: attr.content,
+                    });
+                    is_in = true;
+                }
+            }
+
+            //若结束循环依然没有加入 则创建新类
+            if (is_in === false) {
+                list.push({
+                    class_name: attr.channelName,
+                    id: list.length + 1,
+                    passages: [
+                        {
+                            id: 1,
+                            title: attr.title,
+                            content: attr.content,
+                        },
+                    ],
+                })
+            }
+
+            state.data = list;
+            console.log(state.data);
         },
         // //更新令牌后需要更新access
         // updateAccess: (state, access) => {

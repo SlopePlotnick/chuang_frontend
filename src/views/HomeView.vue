@@ -280,12 +280,12 @@ export default {
         };
 
         const get_id = (cla_id) => {
-            var id = String(cla_id);
+            let id = String(cla_id);
             return 'panelsStayOpen-collapse' + id;
         };
 
         const get_data_bs_target = (cla_id) => {
-            var id = String(cla_id);
+            let id = String(cla_id);
             return '#panelsStayOpen-collapse' + id;
         };
 
