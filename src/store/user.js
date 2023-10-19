@@ -71,7 +71,7 @@ const ModuleUser = {
             // state.refresh = user.refresh;
             state.is_login = user.is_login;
         },
-        //此处写法因为没有和后端统一所以存疑 需不需要加user
+        //此处写法因为没有和后端统一测试所以存疑 需不需要加user
         updateData: (state, attr) => {
             let list = toRaw(state.user.data);
             let is_in = false;
@@ -83,6 +83,7 @@ const ModuleUser = {
                         content: attr.content,
                     });
                     is_in = true;
+                    break;
                 }
             }
 

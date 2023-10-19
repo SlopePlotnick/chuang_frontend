@@ -18,8 +18,9 @@
                         <nav class="navbar bg-body-tertiary">
                             <div class="container-fluid">
                                 <form class="d-flex" role="search">
-                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                                    <button class="btn btn-sm btn-outline-success" type="submit">Search</button>
+                                    <input class="form-control me-2" type="text" placeholder="Search" aria-label="Search">
+                                    <button @click="search" class="btn btn-sm btn-outline-success"
+                                        type="button">Search</button>
                                 </form>
                             </div>
                         </nav>
@@ -38,72 +39,60 @@
                     </div>
                 </div>
                 <!-- 索引栏 -->
-                <div v-for="cla in classifications" :key="cla.id" class="accordion" id="accordionPanelsStayOpenExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                            <!-- 点击类名按钮时 触发display_all_pas事件 更新当前在中栏展示的所有文章 -->
-                            <button @click="display_all_pas(cla.id)" class="accordion-button" type="button"
-                                data-bs-toggle="collapse" :data-bs-target="get_data_bs_target(cla.id)" aria-expanded="true"
-                                :aria-controls="get_id(cla.id)">
-                                {{ cla.class_name }}
-                            </button>
-                        </h2>
-                        <div :id="get_id(cla.id)" class="accordion-collapse collapse show"
-                            aria-labelledby="panelsStayOpen-headingOne">
-                            <div class="accordion-body">
-                                <div v-for="pas in cla.passages" :key="pas.id" class="list-group">
-                                    <a @click="display_one_pas(pas.id)" href="#"
-                                        class="list-group-item list-group-item-action" style="margin-bottom: 10px;">
-                                        {{ pas.title }}
-                                    </a>
+                <!-- 未进入搜索状态 -->
+                <div v-if="is_searching === false">
+                    <div v-for="cla in classifications" :key="cla.id" class="accordion" id="accordionPanelsStayOpenExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                <!-- 点击类名按钮时 触发display_all_pas事件 更新当前在中栏展示的所有文章 -->
+                                <button @click="display_all_pas(cla.id)" class="accordion-button" type="button"
+                                    data-bs-toggle="collapse" :data-bs-target="get_data_bs_target(cla.id)"
+                                    aria-expanded="true" :aria-controls="get_id(cla.id)">
+                                    {{ cla.class_name }}
+                                </button>
+                            </h2>
+                            <div :id="get_id(cla.id)" class="accordion-collapse collapse show"
+                                aria-labelledby="panelsStayOpen-headingOne">
+                                <div class="accordion-body">
+                                    <div v-for="pas in cla.passages" :key="pas.id" class="list-group">
+                                        <a @click="display_one_pas(pas.id)" href="#"
+                                            class="list-group-item list-group-item-action" style="margin-bottom: 10px;">
+                                            {{ pas.title }}
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="accordion-item">
-                        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
-                                aria-controls="panelsStayOpen-collapseTwo">
-                                Accordion Item #2
-                            </button>
-                        </h2>
-                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
-                            aria-labelledby="panelsStayOpen-headingTwo">
-                            <div class="accordion-body">
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item list-group-item-action">
-                                        The current link item
-                                    </a>
-                                    <a href="#" class="list-group-item list-group-item-action">A second link item</a>
-                                    <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-                                    <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
+                </div>
+                <!-- 进入搜索状态 -->
+                <div v-if="is_searching === true">
+                    <button @click="unsearch" style="width: 100%; margin-bottom: 10px;" type="button"
+                        class="btn btn-secondary">退出搜索</button>
+                    <div v-for="cla in classifications_searching" :key="cla.id" class="accordion"
+                        id="accordionPanelsStayOpenExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                <!-- 点击类名按钮时 触发display_all_pas事件 更新当前在中栏展示的所有文章 -->
+                                <button @click="display_all_pas(cla.id)" class="accordion-button" type="button"
+                                    data-bs-toggle="collapse" :data-bs-target="get_data_bs_target(cla.id)"
+                                    aria-expanded="true" :aria-controls="get_id(cla.id)">
+                                    {{ cla.class_name }}
+                                </button>
+                            </h2>
+                            <div :id="get_id(cla.id)" class="accordion-collapse collapse show"
+                                aria-labelledby="panelsStayOpen-headingOne">
+                                <div class="accordion-body">
+                                    <div v-for="pas in cla.passages" :key="pas.id" class="list-group">
+                                        <a @click="display_one_pas(pas.id)" href="#"
+                                            class="list-group-item list-group-item-action" style="margin-bottom: 10px;">
+                                            {{ pas.title }}
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
-                                aria-controls="panelsStayOpen-collapseThree">
-                                Accordion Item #3
-                            </button>
-                        </h2>
-                        <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
-                            aria-labelledby="panelsStayOpen-headingThree">
-                            <div class="accordion-body">
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item list-group-item-action">
-                                        The current link item
-                                    </a>
-                                    <a href="#" class="list-group-item list-group-item-action">A second link item</a>
-                                    <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-                                    <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
             <!-- 中栏 -->
@@ -216,15 +205,57 @@
 <script>
 import { reactive, ref } from 'vue';
 import router from '../router/index';
-import { useStore } from 'vuex';
+// import { useStore } from 'vuex';
 
 export default {
     name: 'HomeView',
 
     setup: () => {
-        const store = useStore();
+        // const store = useStore();
 
-        let classifications = ref(store.state.user.data);
+        // let classifications = ref(store.state.user.data);
+        //此处为了测试拟造了数据
+        let classifications = ref(
+            [
+                {
+                    class_name: 'sports',
+                    id: 1,
+                    passages: [
+                        {
+                            id: 1,
+                            title: 't1',
+                            content: 'aslidhaklsjdhkasjhdfkljashdkflhasldf',
+                        },
+                        {
+                            id: 2,
+                            title: 't2',
+                            content: 'kjhblkjhfiauhsifhpaioufiuhlihuiouhadslfihls',
+                        },
+                        {
+                            id: 3,
+                            title: 't3',
+                            content: 'ojnasciujsedlifuhasdkjfhlihuasdifhasdilfkuh',
+                        },
+                    ]
+                },
+                {
+                    class_name: 'ecology',
+                    id: 2,
+                    passages: [
+                        {
+                            id: 1,
+                            title: 't1',
+                            content: 'iuyweihkasjhckljsdlkfiahjdslk',
+                        },
+                        {
+                            id: 2,
+                            title: 't2',
+                            content: 'adpsoiodsaihfo;siadfishjdfoijhs',
+                        },
+                    ]
+                },
+            ]
+        );
 
         // 当前类下所有的文章
         let current_passages = ref([]);
@@ -289,7 +320,42 @@ export default {
             return '#panelsStayOpen-collapse' + id;
         };
 
-        let is_searching = ref('');
+        let is_searching = ref(false);
+
+        const search = () => {
+            is_searching.value = true;
+        };
+
+        const unsearch = () => {
+            is_searching.value = false;
+        };
+
+        //此处应该用api返回 但暂未与后端测试 所以拟造数据
+        let classifications_searching = ref(
+            [
+                {
+                    class_name: 'sports',
+                    id: 1,
+                    passages: [
+                        {
+                            id: 1,
+                            title: 't1',
+                            content: 'aslidhaklsjdhkasjhdfkljashdkflhasldf',
+                        },
+                        {
+                            id: 2,
+                            title: 't2',
+                            content: 'kjhblkjhfiauhsifhpaioufiuhlihuiouhadslfihls',
+                        },
+                        {
+                            id: 3,
+                            title: 't3',
+                            content: 'ojnasciujsedlifuhasdkjfhlihuasdifhasdilfkuh',
+                        },
+                    ]
+                },
+            ]
+        );
 
         return {
             classifications,
@@ -303,6 +369,9 @@ export default {
             get_data_bs_target,
             current_class_name,
             is_searching,
+            search,
+            classifications_searching,
+            unsearch,
         };
     }
 }
