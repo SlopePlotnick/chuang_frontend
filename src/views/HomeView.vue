@@ -44,7 +44,7 @@
                     <div v-for="cla in classifications" :key="cla.id" class="accordion" id="accordionPanelsStayOpenExample">
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                                <!-- 点击类名按钮时 触发display_all_pas事件 更新当前在中栏展示的所有文章 -->
+                                <!-- 点击类名按钮时 触发display_all_pas事`件 更新当前在中栏展示的所有文章 -->
                                 <button @click="display_all_pas(cla.id)" class="accordion-button" type="button"
                                     data-bs-toggle="collapse" :data-bs-target="get_data_bs_target(cla.id)"
                                     aria-expanded="true" :aria-controls="get_id(cla.id)">
