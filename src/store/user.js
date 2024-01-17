@@ -9,43 +9,6 @@ const ModuleUser = {
             username: "",
             //这里为了测试拟造了数据
             data: [
-                {
-                    class_name: 'sports',
-                    id: 1,
-                    passages: [
-                        {
-                            id: 1,
-                            title: 't1',
-                            content: 'aslidhaklsjdhkasjhdfkljashdkflhasldf',
-                        },
-                        {
-                            id: 2,
-                            title: 't2',
-                            content: 'kjhblkjhfiauhsifhpaioufiuhlihuiouhadslfihls',
-                        },
-                        {
-                            id: 3,
-                            title: 't3',
-                            content: 'ojnasciujsedlifuhasdkjfhlihuasdifhasdilfkuh',
-                        },
-                    ]
-                },
-                {
-                    class_name: 'ecology',
-                    id: 2,
-                    passages: [
-                        {
-                            id: 1,
-                            title: 't1',
-                            content: 'iuyweihkasjhckljsdlkfiahjdslk',
-                        },
-                        {
-                            id: 2,
-                            title: 't2',
-                            content: 'adpsoiodsaihfo;siadfishjdfoijhs',
-                        },
-                    ]
-                },
             ],
             // photo: "",
             // followerCount: 0,
@@ -105,10 +68,68 @@ const ModuleUser = {
             state.data = list;
             console.log(state.data);
         },
-        // //更新令牌后需要更新access
-        // updateAccess: (state, access) => {
-        //     state.access = access;
-        // },
+        updateKnowledge(state)
+        {
+            // 调用api获取知识库名称列表
+            $.ajax({
+                url: 'https://u8606i6360.vicp.fun/knowledge_base/list_knowledge_bases',
+                type: "GET",
+                success: (resp) => {
+                     if (resp.msg === "success") {
+                         let name_ku = resp.data;
+                         let list = [];
+
+                         for (let i = 0; i < name_ku.length; i++)
+                         {
+                             let new_cls = {};
+                             new_cls.class_name = name_ku[i];
+                             new_cls.id = i;
+                             new_cls.passages = [];
+
+                             // 调用api获取该名称知识库中的文件列表
+                             let get_file_url = 'https://u8606i6360.vicp.fun/knowledge_base/list_files?knowledge_base_name=' + new_cls.class_name;
+                             $.ajax({
+                                 url: get_file_url,
+                                 type: "GET",
+                                 success: (resp) => {
+                                     if (resp.msg === "success") {
+                                         let name_file = resp.data;
+
+                                         for (let j = 0; j < name_file.length; j++)
+                                         {
+                                             let new_pas = {};
+                                             new_pas.id = j;
+                                             new_pas.title = name_file[j];
+                                             new_pas.content = '暂不支持预览';
+
+                                             new_cls.passages.push(new_pas);
+                                         }
+
+                                         console.log("获取知识库文件成功")
+                                     }
+                                     else {
+                                         console.log("获取知识库文件失败");
+                                     }
+                                 },
+                                 error: () => {
+                                     console.log("获取知识库文件api访问失败");
+                                 }
+                             });
+
+                             list.push(new_cls);
+                         }
+
+                         state.data = list;
+                         console.log("更新知识库信息成功");
+                     } else {
+                         console.log("更新知识库信息失败");
+                     }
+                },
+                error: () => {
+                    console.log("更新知识库信息api访问失败");
+                }
+            })
+        },
         //此处将logout的逻辑写在了mutations中是因为该操作是同步的 且逻辑上相当于是对state的一次更新
         logout: (state) => {
             state.id = "";
@@ -146,6 +167,7 @@ const ModuleUser = {
                             // refresh: refresh,
                             is_login: true,
                         });
+                        context.commit("updateKnowledge");
                         data.success();
                     } else {
                         data.error();

@@ -61,10 +61,6 @@ import { useStore } from 'vuex';
 import { ref } from 'vue';
 // import { reactive } from 'vue';
 
-// $(function () {
-//     FileInput('#file', '../assets')
-// });
-
 export default {
     name: 'AddFileView',
     setup: () => {
@@ -135,7 +131,7 @@ export default {
                 maxFileSize: 2048,   //上传文件最大值，单位kb
                 uploadAsync: true,  //异步上传
                 maxFileCount: 1,   //上传文件最大个数。
-                enctype: 'multipart/form-data',
+                enctype: 'multipart`/form-data',
             }).on("fileuploaded", function (event, data) { //异步上传成功后回调 data为返回的数据
                 if (data.result === 'success') {
                     cls_ok = true;
