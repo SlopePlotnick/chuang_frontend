@@ -1,11 +1,9 @@
-<template>
-    用户信息
-</template>
+<template>用户信息</template>
 
 <script>
 export default {
-    name: 'UserProfileView',
-}
+  name: "UserProfileView",
+};
 </script>
 
 <style scoped></style>
