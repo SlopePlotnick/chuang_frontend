@@ -1,21 +1,30 @@
 <template>
+  <div
+    style="margin-left: 10px; margin-right: 10px; margin-top: 10px"
+    class="alert alert-info"
+    role="alert"
+  >
+    您可以在本页面中上传本地文件，以调用ai模型进行辅助分类，在此列出如下注意事项：<br />
+    <ol>
+      <li>
+        您可以上传200MB以内的HTML, MD, JSON, CSV, PDF, PNG, JPG, JPEG, BMP, EML,
+        MSG, RST, RTF, TXT, XML, DOCX, EPUB, ODT, PPT, PPTX, TSV,
+        HTM格式的文件，<strong>不支持DOC格式的文件</strong>
+      </li>
+      <li>
+        一般而言，ai只能辅助您在已有的知识库类别中进行选择，当上传的文件不能归入已有类别时，ai将给出自己的分类意见
+      </li>
+      <li>
+        <strong>经测试，ai的分类结果可能出错</strong>
+      </li>
+      <li>
+        在该页面上传的文件只供进行ai分类，不会加入知识库中，请务必在当前文件分类任务完成后点击<strong>确认</strong>，否则将会<strong>极大影响您之后上传文本分类的正确率</strong>。您可以在<strong>知识库管理</strong>页面中将文本加入知识库
+      </li>
+    </ol>
+  </div>
+
   <div class="card">
     <div class="card-body">
-      <!--        <div class="mb-3">-->
-      <!--          <select-->
-      <!--            v-model="choice"-->
-      <!--            class="form-select"-->
-      <!--            required-->
-      <!--            aria-label="select example"-->
-      <!--          >-->
-      <!--            <option value="">请选择要传输的文件</option>-->
-      <!--            <option v-for="name in name_ku" :key="name.id" :value="name.id">-->
-      <!--              {{ name.class_name }}-->
-      <!--            </option>-->
-      <!--          </select>-->
-      <!--          <div class="invalid-feedback">请选择知识库名称</div>-->
-      <!--        </div>-->
-
       <div class="input-group mb-3">
         <input
           type="file"
@@ -109,7 +118,7 @@
           style="width: 100%"
           v-if="file_success === true && file_finish === true"
           type="button"
-          class="btn btn-success"
+          class="btn btn-outline-success"
           data-bs-toggle="collapse"
           data-bs-target="#collapseConversation"
           aria-expanded="false"
@@ -138,7 +147,19 @@
           <h4 class="alert-heading">对话成功</h4>
           <p>{{ ans }}</p>
           <hr />
-          <p class="mb-0">现在您可以根据ai分析结果将文本上传至对应的知识库</p>
+          <p class="mb-0">
+            现在您可以根据ai分析结果将文本上传至对应的知识库<br /><strong
+              >离开本页面前务必点击确认按钮</strong
+            >
+          </p>
+          <button
+            @click="delete_file"
+            style="width: 100%"
+            type="button"
+            class="btn btn-danger"
+          >
+            确认
+          </button>
         </div>
         <div
           v-if="conv_finish === true && conv_success === false"
@@ -148,95 +169,21 @@
         >
           <h4 class="alert-heading">对话失败</h4>
           <hr />
-          <p class="mb-0">请检查网络状况</p>
+          <p class="mb-0">
+            请检查网络状况<br /><strong>离开本页面前务必点击确认按钮</strong>
+          </p>
+          <button
+            @click="delete_file"
+            style="width: 100%"
+            type="button"
+            class="btn btn-danger"
+          >
+            确认
+          </button>
         </div>
       </div>
     </div>
   </div>
-
-  <!--  &lt;!&ndash; 分割线 &ndash;&gt;-->
-  <!--  <div-->
-  <!--    class="progress"-->
-  <!--    role="progressbar"-->
-  <!--    aria-label="Basic example"-->
-  <!--    aria-valuenow="100"-->
-  <!--    aria-valuemin="0"-->
-  <!--    aria-valuemax="100"-->
-  <!--    style="height: 5px; border-radius: 0; margin-top: 10px"-->
-  <!--  >-->
-  <!--    <div-->
-  <!--      class="progress-bar progress-bar-striped bg-success"-->
-  <!--      style="width: 100%; height: 5px"-->
-  <!--    ></div>-->
-  <!--  </div>-->
-  <!--  <table v-if="cls_ok === false" class="table">-->
-  <!--    <thead>-->
-  <!--      <tr>-->
-  <!--        <th scope="col">#</th>-->
-  <!--        <th scope="col">channelName</th>-->
-  <!--        <th scope="col">Title</th>-->
-  <!--        <th scope="col">Content</th>-->
-  <!--      </tr>-->
-  <!--    </thead>-->
-  <!--    <tbody v-for="attr in file_attr" :key="attr.id">-->
-  <!--      <tr>-->
-  <!--        &lt;!&ndash; 这里实际上应该是{{ cnt }}但为了调试方便 改成文章id &ndash;&gt;-->
-  <!--        <th scope="row">{{ attr.id }}</th>-->
-  <!--        <td>-->
-  <!--          <div class="card">-->
-  <!--            <div class="card-body">-->
-  <!--              {{ attr.channelName }}-->
-  <!--              <button-->
-  <!--                style="float: right"-->
-  <!--                class="btn btn-primary"-->
-  <!--                type="button"-->
-  <!--                data-bs-toggle="collapse"-->
-  <!--                :data-bs-target="get_data_bs_target(attr.id)"-->
-  <!--                aria-expanded="false"-->
-  <!--                aria-controls="collapseExample"-->
-  <!--              >-->
-  <!--                修改-->
-  <!--              </button>-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--          <div style="margin-top: 5px" class="collapse" :id="get_id(attr.id)">-->
-  <!--            <div class="input-group mb-3">-->
-  <!--              <input-->
-  <!--                v-model="new_channelName"-->
-  <!--                type="text"-->
-  <!--                class="form-control"-->
-  <!--                placeholder="新类名"-->
-  <!--                aria-label="Recipient's username"-->
-  <!--                aria-describedby="button-addon2"-->
-  <!--              />-->
-  <!--              <button-->
-  <!--                @click="update_channelName(attr.id)"-->
-  <!--                class="btn btn-outline-secondary"-->
-  <!--                type="button"-->
-  <!--                id="button-addon2"-->
-  <!--              >-->
-  <!--                确认-->
-  <!--              </button>-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--        </td>-->
-  <!--        <td>{{ attr.title }}</td>-->
-  <!--        <td>{{ attr.content }}</td>-->
-  <!--      </tr>-->
-  <!--    </tbody>-->
-  <!--  </table>-->
-  <!--  <div class="card">-->
-  <!--    <div class="card-body">-->
-  <!--      <button-->
-  <!--        @click="update_user_data"-->
-  <!--        style="width: 100%"-->
-  <!--        type="button"-->
-  <!--        class="btn btn-danger"-->
-  <!--      >-->
-  <!--        添加完成-->
-  <!--      </button>-->
-  <!--    </div>-->
-  <!--  </div>-->
 </template>
 
 <script type="text/javascript">
@@ -245,6 +192,7 @@ import { useStore } from "vuex";
 // import axios from 'axios';
 import { ref } from "vue";
 // import { reactive } from 'vue';
+import router from "../router/index";
 
 export default {
   name: "AddFileView",
@@ -262,12 +210,7 @@ export default {
     let conv_finish = ref(false);
     let conv_success = ref(false);
     const getFile = (e) => {
-      console.log(e);
-      // var data = new FormData();
-      // data.append("file", e.target.files[0]);
       file.value = e.target.files[0];
-      console.log(file.value);
-      // console.log(file.value);
     };
     $.ajax({
       url: "https://u8606i6360.vicp.fun/knowledge_base/list_knowledge_bases",
@@ -401,7 +344,9 @@ export default {
       let question =
         "当前知识库与什么领域有关？请在以下领域中选一个作答：" +
         name_in_query +
-        "回答中不要包含除领域名称外的其他字符。";
+        "如果当前知识库与上述两个领域都无关，你认为该知识库可以被划分到什么领域？" +
+        '回答时，首先回答"可归入已有知识库"或"不可归入已有知识库"，然后回答归入领域的名称，若可以归入给出的领域，回答的领域名称应与我给出领域的其中一个名称完全一致。' +
+        "注意除回答可否归入已有知识库和领域名称外，不要有其余字符。";
 
       $.ajax({
         url: "https://u8606i6360.vicp.fun/chat/knowledge_base_chat",
@@ -427,12 +372,14 @@ export default {
             i++;
           }
           let j = i + 1;
-          while (ans.value[j] !== '[') {
+          while (ans.value[j] !== "[") {
             j++;
           }
-          ans.value = '分类结果: ' + ans.value.slice(12, i)
-          + '分析来源: '
-          + ans.value.slice(j + 2, ans.value.length - 3);
+          ans.value =
+            "分类结果: " +
+            ans.value.slice(12, i) +
+            "分析来源: " +
+            ans.value.slice(j + 2, ans.value.length - 3);
           conv_success.value = true;
         },
         error: (resp) => {
@@ -441,6 +388,27 @@ export default {
           conv_finish.value = true;
           conv_success.value = false;
         },
+      });
+    };
+
+    const delete_file = () => {
+      $.ajax({
+        url: "https://u8606i6360.vicp.fun/knowledge_base/delete_docs",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          knowledge_base_name: "unknown",
+          file_names: [file.value.name],
+          delete_content: true,
+          not_refresh_vs_cache: true,
+        }),
+        success: (resp) => {
+          console.log(resp.msg);
+          router.push({ name: "home" })
+        },
+        error: (resp) => {
+          console.log(resp);
+        }
       });
     };
 
@@ -465,6 +433,7 @@ export default {
       conv_finish,
       conv_success,
       conversation,
+      delete_file,
     };
   },
 };
