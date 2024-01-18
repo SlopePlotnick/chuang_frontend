@@ -11,7 +11,7 @@ name取值貌似可以用单引号或双引号包含字符串
         v-if="!$store.state.user.is_login"
         class="navbar-brand"
         :to="{ name: 'userprofile' }"
-        >我的信息
+        >知识库管理
       </router-link>
       <button
         class="navbar-toggler"
@@ -39,7 +39,7 @@ name取值貌似可以用单引号或双引号包含字符串
               v-if="!$store.state.user.is_login"
               class="nav-link"
               :to="{ name: 'addfile' }"
-              >添加文件
+              >ai辅助分类
             </router-link>
           </li>
         </ul>

@@ -75,7 +75,7 @@
                 <!-- 点击类名按钮时 触发display_all_pas事`件 更新当前在中栏展示的所有文章 -->
                 <button
                   @click="display_all_pas(cla.id)"
-                  class="accordion-button"
+                  class="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
                   :data-bs-target="get_data_bs_target(cla.id)"
@@ -87,7 +87,7 @@
               </h2>
               <div
                 :id="get_id(cla.id)"
-                class="accordion-collapse collapse show"
+                class="accordion-collapse collapse"
                 aria-labelledby="panelsStayOpen-headingOne"
               >
                 <div class="accordion-body">
