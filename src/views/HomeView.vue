@@ -192,7 +192,7 @@
                       >
                         <use xlink:href="#check-circle-fill" />
                       </svg>
-                      <div>知识库创建成功</div>
+                      <div>知识库创建成功 刷新查看结果</div>
                     </div>
                   </div>
                 </div>
@@ -452,11 +452,61 @@
           v-if="!(current_class_name === '')"
           type="button"
           class="btn btn-danger"
-          @click="delete_kb"
+          data-bs-toggle="modal"
+          data-bs-target="#staticKu"
         >
           删除知识库
         </button>
-        <div v-else class="tishi">点击左侧分类名称以预览该类文本</div>
+        <div
+          class="modal fade"
+          id="staticKu"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                  Warning
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                您确定要删除知识库{{ current_class_name }}吗？该操作<strong
+                  >不可撤销</strong
+                >
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  取消
+                </button>
+                <button
+                  @click="delete_kb"
+                  type="button"
+                  class="btn btn-danger"
+                  data-bs-dismiss="modal"
+                >
+                  确定
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="current_class_name === ''" class="tishi">
+          点击左侧分类名称以预览该类文本
+        </div>
         <hr />
         <div
           style="margin-top: 5px"
@@ -854,7 +904,24 @@ export default {
     };
 
     const delete_kb = () => {
-
+      $.ajax({
+        url: "https://u8606i6360.vicp.fun/knowledge_base/delete_knowledge_base",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(current_class_name.value),
+        success: (resp) => {
+          console.log("知识库删除成功");
+          console.log(resp.msg);
+          de_ku_finish.value = true;
+          de_ku_success.value = true;
+        },
+        error: (resp) => {
+          console.log("知识库删除失败");
+          console.log(resp);
+          de_ku_finish.value = true;
+          de_ku_success.value = false;
+        },
+      });
     };
 
     return {
