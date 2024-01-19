@@ -11,7 +11,7 @@ name取值貌似可以用单引号或双引号包含字符串
         v-if="!$store.state.user.is_login"
         class="navbar-brand"
         :to="{ name: 'userprofile' }"
-        >知识库管理
+        >Chat
       </router-link>
       <button
         class="navbar-toggler"

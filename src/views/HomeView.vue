@@ -18,30 +18,8 @@
         "
       >
         <div class="row">
-          <!-- 搜索栏 -->
-          <div class="col-9" style="padding-left: 0">
-            <nav class="navbar bg-body-tertiary">
-              <div class="container-fluid">
-                <form class="d-flex" role="search">
-                  <input
-                    class="form-control me-2"
-                    type="text"
-                    placeholder="Search"
-                    aria-label="Search"
-                  />
-                  <button
-                    @click="search"
-                    class="btn btn-sm btn-outline-success"
-                    type="button"
-                  >
-                    Search
-                  </button>
-                </form>
-              </div>
-            </nav>
-          </div>
           <!-- 添加文件按钮 -->
-          <div class="col-3" style="padding: 0">
+          <div class="col-3" style="padding: 0; width: 95%; margin: 5px auto">
             <button
               type="button"
               class="btn btn-light"
@@ -111,7 +89,7 @@
                 >
                   <storng>知识库名称不支持英文！</storng>
                 </div>
-                <div v-if="add_kb_start === true" class="card card-body">
+                <div v-if="add_kb_start === true && add_file_start === false" class="card card-body">
                   <!--                  表单本体-->
                   <div class="input-group mb-3">
                     <!--                    输入标签-->
@@ -211,7 +189,7 @@
                   </div>
                 </div>
                 <!--                上传文件组件-->
-                <div v-if="add_file_start === true" class="card card-body">
+                <div v-if="add_file_start === true && add_kb_start === false" class="card card-body">
                   <!--                  表单本体-->
                   <form class="was-validated">
                     <div class="mb-3">
@@ -222,7 +200,7 @@
                         required
                         aria-label="select example"
                       >
-                        <option value="">请选择要传输的文件</option>
+                        <option selected>请选择要传输的文件</option>
                         <option
                           v-for="name in name_ku"
                           :key="name.id"
@@ -337,7 +315,7 @@
           </div>
         </div>
         <!-- 索引栏 -->
-        <div v-if="is_searching === false">
+        <div>
           <div
             v-for="cla in classifications"
             :key="cla.id"
@@ -528,7 +506,6 @@
           class="list-group"
         >
           <a
-            @click="display_one_pas(pas.id)"
             href="#"
             class="list-group-item list-group-item-action"
             style="margin-bottom: 10px"
@@ -547,6 +524,8 @@
                 @click.stop="delete_file(pas.title)"
                 type="button"
                 class="btn btn-outline-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#staticFile"
               >
                 删除
               </button>
@@ -560,6 +539,93 @@
             </div>
           </a>
         </div>
+        <div
+            class="modal fade"
+            id="staticFile"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="staticFileLabel"
+            aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <!--                弹窗标题-->
+                <h1 class="modal-title fs-5" id="staticKuLabel">Warning</h1>
+                <!--                关闭按钮-->
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+              </div>
+              <!--              提示信息-->
+              <div class="modal-body">
+                您确定要删除该文件吗？该操作<strong
+              >不可撤销</strong
+              >
+              </div>
+              <div class="modal-footer">
+                <!--                取消按钮-->
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                  取消
+                </button>
+                <!--                确定按钮-->
+                <button
+                    @click="delete_file"
+                    type="button"
+                    class="btn btn-danger"
+                    data-bs-target="#staticKu2"
+                    data-bs-toggle="modal"
+                >
+                  确定
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--        弹窗页面2-->
+        <div
+            class="modal fade"
+            id="staticFile2"
+            aria-hidden="true"
+            aria-labelledby="staticFileLabel2"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticKuLabel2">Warning</h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">页面将刷新供您检查结果</div>
+              <div class="modal-footer">
+                <!--                取消按钮-->
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                    @click="refresh"
+                >
+                  确定
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- 右栏 -->
       <div
@@ -567,18 +633,183 @@
         style="padding-top: 10px; margin-right: 0; margin-left: 0"
       >
         <div
-          v-if="!(one_passage.title === undefined)"
-          data-bs-spy="scroll"
-          data-bs-target="#navbar-example3"
-          data-bs-smooth-scroll="true"
-          class="scrollspy-example-2"
-          tabindex="0"
+          style="text-align: center"
+          class="alert alert-success"
+          role="alert"
         >
-          <h4>{{ one_passage.title }}</h4>
-          <p>{{ one_passage.content }}</p>
+          检索区
         </div>
-        <!--        没有选中文章时的提示信息-->
-        <div v-else class="tishi">点击中部按钮以阅读文章</div>
+        <div class="card">
+          <div class="card-body">
+            <form>
+              <div class="row mb-3">
+                <label for="keyword" class="col-sm-2 col-form-label"
+                  >关键词(必填)</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    v-model="key_word"
+                    type="text"
+                    class="form-control"
+                    id="keyword"
+                    required
+                    placeholder="请输入关键词"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="kb_choice" class="col-sm-2 col-form-label"
+                  >知识库(必填)</label
+                >
+                <div class="col-sm-10">
+                  <select
+                    v-model="search_choice"
+                    class="form-select"
+                    required
+                    aria-label="select example"
+                    id="kb_choice"
+                  >
+                    <option selected>请选择要搜索的知识库</option>
+                    <option
+                      v-for="name in name_ku"
+                      :key="name.id"
+                      :value="name.id"
+                    >
+                      {{ name.class_name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="topk" class="col-sm-2 col-form-label"
+                  >匹配向量数</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    v-model="top_k"
+                    type="number"
+                    class="form-control"
+                    id="topk"
+                    min="0"
+                    max="20"
+                    step="1"
+                    placeholder="可输入0-20的整数 非必填"
+                  />
+                </div>
+              </div>
+              <button
+                @click="search"
+                style="width: 100%"
+                type="button"
+                class="btn btn-outline-success"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseSearch"
+                aria-expanded="false"
+                aria-controls="collapseSearch"
+              >
+                Search
+              </button>
+            </form>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="check-circle-fill" viewBox="0 0 16 16">
+                <path
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                />
+              </symbol>
+              <symbol id="info-fill" viewBox="0 0 16 16">
+                <path
+                  d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
+                />
+              </symbol>
+              <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+                <path
+                  d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
+                />
+              </symbol>
+            </svg>
+            <!--      用collapse的方式展示-->
+            <div style="margin-top: 5px" class="collapse" id="collapseSearch">
+              <!--        检索中-->
+              <div
+                v-if="search__finish === false"
+                class="alert alert-warning d-flex align-items-center"
+                role="alert"
+              >
+                <svg
+                  width="20px"
+                  height="20px"
+                  class="bi flex-shrink-0 me-2"
+                  role="img"
+                  aria-label="Warning:"
+                >
+                  <use xlink:href="#exclamation-triangle-fill" />
+                </svg>
+                <div>模型检索中</div>
+              </div>
+              <!--        检索失败-->
+              <div
+                v-if="search_success === false && search_finish === true"
+                class="alert alert-danger d-flex align-items-center"
+                role="alert"
+              >
+                <svg
+                  width="20px"
+                  height="20px"
+                  class="bi flex-shrink-0 me-2"
+                  role="img"
+                  aria-label="Danger:"
+                >
+                  <use xlink:href="#exclamation-triangle-fill" />
+                </svg>
+                <div>检索失败</div>
+              </div>
+              <!--        检索成功-->
+              <div
+                v-if="search_success === true && search_finish === true"
+                class="alert alert-success d-flex align-items-center"
+                role="alert"
+              >
+                <svg
+                  width="20px"
+                  height="20px"
+                  class="bi flex-shrink-0 me-2"
+                  role="img"
+                  aria-label="Success:"
+                >
+                  <use xlink:href="#check-circle-fill" />
+                </svg>
+                <div>检索成功</div>
+              </div>
+              <!--              展示搜索结果-->
+              <div v-if="search_success === true && search_finish === true">
+                <ol
+                  v-for="ans in search_ans"
+                  :key="ans.id"
+                  class="list-group list-group-numbered"
+                >
+                  <li
+                    style="margin: 2.5px auto" class="list-group-item d-flex justify-content-between align-items-start"
+                  >
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{ ans.metadata.source }}</div>
+                      {{ ans.page_content }}
+                    </div>
+                  </li>
+                </ol>
+              </div>
+              <!--        重新搜索的按钮-->
+              <button
+                @click="research"
+                style="width: 100%; margin-top: 5px;"
+                v-if="search_success === true"
+                type="button"
+                class="btn btn-outline-success"
+              >
+                重新搜索
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -630,12 +861,20 @@ export default {
     // 知识库删除状态
     let de_ku_finish = ref(false);
     let de_ku_success = ref(false);
-    //选中的展示的唯一的文章
+    // 选中的展示的唯一的文章
     let one_passage = reactive({});
-    // 搜索状态
-    let is_searching = ref(false);
-    // 直接从前端获取知识库信息 存入classifications
+    // 检索关键字
+    let key_word = ref("");
+    // 选择的知识库
+    let search_choice = ref();
+    // 匹配向量数
+    let top_k = ref();
+    // 检索状态
+    let search_finish = ref(false);
+    let search_success = ref(false);
+    let search_ans = ref([]);
 
+    // 直接从前端获取知识库信息 存入classifications
     // 获取知识库列表
     $.ajax({
       url: "https://u8606i6360.vicp.fun/knowledge_base/list_knowledge_bases",
@@ -754,16 +993,6 @@ export default {
     const get_data_bs_target = (cla_id) => {
       let id = String(cla_id);
       return "#panelsStayOpen-collapse" + id;
-    };
-
-    // 进入搜索状态
-    const search = () => {
-      is_searching.value = true;
-    };
-
-    // 退出搜索状态
-    const unsearch = () => {
-      is_searching.value = false;
     };
 
     // 进入创建知识库状态
@@ -921,7 +1150,7 @@ export default {
       console.log(typeof pas_title);
 
       $.ajax({
-        url: 'https://u8606i6360.vicp.fun/knowledge_base/download_doc?knowledge_base_name=astronautics&file_name=test.txt',
+        url: "https://u8606i6360.vicp.fun/knowledge_base/download_doc?knowledge_base_name=astronautics&file_name=test.txt",
         type: "GET",
         success: (resp) => {
           console.log("文件下载成功");
@@ -934,13 +1163,47 @@ export default {
       });
     };
 
+    // 调用搜索api进行搜索
+    const search = () => {
+      $.ajax({
+        url: "https://u8606i6360.vicp.fun/knowledge_base/search_docs",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          query: key_word.value,
+          knowledge_base_name: name_ku.value[search_choice.value].class_name,
+          top_k: top_k.value,
+        }),
+        success: (resp) => {
+          console.log("知识库搜索成功");
+          for (let i = 0; i < resp.length; i++) {
+            let obj = { ...resp[i] };
+            obj.id = i;
+            search_ans.value.push(obj);
+          }
+          search_finish.value = true;
+          search_success.value = true;
+        },
+        error: (resp) => {
+          console.log("知识库搜索失败");
+          search_finish.value = true;
+          search_success.value = false;
+          console.log(resp);
+        },
+      });
+    };
+
+    const research = () => {
+      search_finish.value = false;
+      search_success.value = false;
+    };
+
     return {
       classifications,
       current_passages,
       current_class_id,
       one_passage,
       current_class_name,
-      is_searching,
       add_kb_start,
       add_file_start,
       choice,
@@ -952,12 +1215,16 @@ export default {
       ku_success,
       de_ku_finish,
       de_ku_success,
+      key_word,
+      search_choice,
+      top_k,
+      search_finish,
+      search_success,
+      search_ans,
       display_all_pas,
       display_one_pas,
       get_id,
       get_data_bs_target,
-      search,
-      unsearch,
       add_kb,
       add_file,
       over_add_kb,
@@ -969,6 +1236,8 @@ export default {
       refresh,
       delete_file,
       download_file,
+      search,
+      research,
     };
   },
 };
