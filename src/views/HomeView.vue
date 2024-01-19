@@ -537,6 +537,27 @@
               <h5 class="mb-1">{{ pas.title }}</h5>
             </div>
             <p class="mb-1 text-truncate">{{ pas.content }}</p>
+            <div
+              style="width: 100%"
+              class="btn-group"
+              role="group"
+              aria-label="Basic mixed styles example"
+            >
+              <button
+                @click.stop="delete_file(pas.title)"
+                type="button"
+                class="btn btn-outline-danger"
+              >
+                删除
+              </button>
+              <button
+                @click.stop="download_file(pas.title)"
+                type="button"
+                class="btn btn-outline-success"
+              >
+                下载
+              </button>
+            </div>
           </a>
         </div>
       </div>
@@ -866,6 +887,53 @@ export default {
       window.location.reload();
     };
 
+    const delete_file = (pas_title) => {
+      console.log(current_class_name.value);
+      console.log(typeof current_class_name.value);
+      console.log(pas_title);
+      console.log(typeof pas_title);
+
+      $.ajax({
+        url: "https://u8606i6360.vicp.fun/knowledge_base/delete_docs",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          knowledge_base_name: current_class_name.value,
+          file_names: [pas_title],
+          delete_content: true,
+          not_refresh_vs_cache: true,
+        }),
+        success: (resp) => {
+          console.log("文件删除成功");
+          console.log(resp.msg);
+        },
+        error: (resp) => {
+          console.log("文件删除失败");
+          console.log(resp);
+        },
+      });
+    };
+
+    const download_file = (pas_title) => {
+      console.log(current_class_name.value);
+      console.log(typeof current_class_name.value);
+      console.log(pas_title);
+      console.log(typeof pas_title);
+
+      $.ajax({
+        url: 'https://u8606i6360.vicp.fun/knowledge_base/download_doc?knowledge_base_name=astronautics&file_name=test.txt',
+        type: "GET",
+        success: (resp) => {
+          console.log("文件下载成功");
+          console.log(typeof resp);
+        },
+        error: (resp) => {
+          console.log("文件下载失败");
+          console.log(resp);
+        },
+      });
+    };
+
     return {
       classifications,
       current_passages,
@@ -899,6 +967,8 @@ export default {
       create_knowledge_base,
       delete_kb,
       refresh,
+      delete_file,
+      download_file,
     };
   },
 };
