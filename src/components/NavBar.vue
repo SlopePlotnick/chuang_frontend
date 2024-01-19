@@ -48,13 +48,13 @@ name取值貌似可以用单引号或双引号包含字符串
         <ul class="navbar-nav" v-if="!$store.state.user.is_login">
           <li class="nav-item">
             <router-link class="nav-link" :to="{ name: 'login' }"
-              >登陆</router-link
-            >
+              >登陆
+            </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" :to="{ name: 'register' }"
-              >注册</router-link
-            >
+              >注册
+            </router-link>
           </li>
         </ul>
         <ul class="navbar-nav" v-else>

@@ -1,4 +1,5 @@
 <template>
+  <!--  提醒事项-->
   <div
     style="margin-left: 10px; margin-right: 10px; margin-top: 10px"
     class="alert alert-info"
@@ -22,9 +23,10 @@
       </li>
     </ol>
   </div>
-
+  <!--  下方正式页面-->
   <div class="card">
     <div class="card-body">
+      <!--      文件上传组件-->
       <div class="input-group mb-3">
         <input
           type="file"
@@ -46,7 +48,8 @@
           上传
         </button>
       </div>
-
+      <!--      上传提示组件-->
+      <!--      这里的svg是提取网络素材-->
       <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
         <symbol id="check-circle-fill" viewBox="0 0 16 16">
           <path
@@ -64,7 +67,9 @@
           />
         </symbol>
       </svg>
+      <!--      用collapse的方式展示-->
       <div class="collapse" id="collapseUpload">
+        <!--        上传中-->
         <div
           v-if="file_finish === false"
           class="alert alert-warning d-flex align-items-center"
@@ -81,6 +86,7 @@
           </svg>
           <div>文件上传中</div>
         </div>
+        <!--        上传失败-->
         <div
           v-if="file_success === false && file_finish === true"
           class="alert alert-danger d-flex align-items-center"
@@ -97,6 +103,7 @@
           </svg>
           <div>文件上传失败</div>
         </div>
+        <!--        上传成功-->
         <div
           v-if="file_success === true && file_finish === true"
           class="alert alert-success d-flex align-items-center"
@@ -113,6 +120,7 @@
           </svg>
           <div>文件上传成功</div>
         </div>
+        <!--        获取分析结果的按钮-->
         <button
           @click="conversation"
           style="width: 100%"
@@ -127,7 +135,9 @@
           获取分析结果
         </button>
       </div>
+      <!--      分析结果组件 用collapse方式展示-->
       <div class="collapse" id="collapseConversation">
+        <!--        思考过程-->
         <div
           v-if="conv_finish === false"
           class="alert alert-warning"
@@ -138,6 +148,7 @@
           <hr />
           <p class="mb-0">请稍候</p>
         </div>
+        <!--        对话成功-->
         <div
           v-if="conv_finish === true && conv_success === true"
           class="alert alert-success"
@@ -152,6 +163,7 @@
               >离开本页面前务必点击确认按钮</strong
             >
           </p>
+          <!--          确认按钮-->
           <button
             @click="delete_file"
             style="width: 100%"
@@ -161,6 +173,7 @@
             确认
           </button>
         </div>
+        <!--        对话失败-->
         <div
           v-if="conv_finish === true && conv_success === false"
           class="alert alert-danger"
@@ -189,9 +202,7 @@
 <script type="text/javascript">
 import $ from "jquery";
 import { useStore } from "vuex";
-// import axios from 'axios';
 import { ref } from "vue";
-// import { reactive } from 'vue';
 import router from "../router/index";
 
 export default {
@@ -209,9 +220,8 @@ export default {
     let file_success = ref(false);
     let conv_finish = ref(false);
     let conv_success = ref(false);
-    const getFile = (e) => {
-      file.value = e.target.files[0];
-    };
+
+    // 获取知识库列表 之后有用
     $.ajax({
       url: "https://u8606i6360.vicp.fun/knowledge_base/list_knowledge_bases",
       type: "GET",
@@ -234,33 +244,6 @@ export default {
       },
     });
 
-    let file_attr = ref([
-      {
-        id: 1,
-        channelName: "sports",
-        title: "t4",
-        content: "asdiufhpasiduhflikahsd",
-      },
-      {
-        id: 2,
-        channelName: "sports",
-        title: "t5",
-        content: "adisfjb;askdjfh;asudihf;asidhf;ia",
-      },
-      {
-        id: 3,
-        channelName: "ecology",
-        title: "t3",
-        content: "adsiufhaisduhfklasdhflkasdhflkashdflauhsd",
-      },
-      {
-        id: 4,
-        channelName: "happy",
-        title: "t4",
-        content: "adsiufhaisduhfklasdhflkasdhflkashdflauhsd",
-      },
-    ]);
-
     const get_data_bs_target = (attr_id) => {
       let id = String(attr_id);
       return "#" + "collapseExample" + id;
@@ -271,21 +254,12 @@ export default {
       return "collapseExample" + id;
     };
 
-    const update_channelName = (attr_id) => {
-      for (let attr of file_attr.value) {
-        if (attr.id === attr_id) {
-          attr.channelName = new_channelName.value;
-        }
-      }
+    // 获取文件上传组件的文件信息
+    const getFile = (e) => {
+      file.value = e.target.files[0];
     };
 
-    const update_user_data = () => {
-      for (let attr of file_attr.value) {
-        store.commit("updateData", attr);
-      }
-      // store.commit('updateData');
-    };
-
+    // 上传文件逻辑
     const uploadFile = () => {
       const obj = {
         files: file.value,
@@ -326,7 +300,9 @@ export default {
       });
     };
 
+    // 对话逻辑
     const conversation = () => {
+      // 从name_ku中获取现有的所有知识库名称，并将unknown剔除 用于喂给ai
       let name_in_query = "";
       for (let i = 0; i < name_ku.value.length; i++) {
         if (name_ku.value[i].class_name === "unknown") {
@@ -341,6 +317,7 @@ export default {
       }
       console.log(name_in_query);
 
+      // 问题定义
       let question =
         "当前知识库与什么领域有关？请在以下领域中选一个作答：" +
         name_in_query +
@@ -348,6 +325,7 @@ export default {
         '回答时，首先回答"可归入已有知识库"或"不可归入已有知识库"，然后回答归入领域的名称，若可以归入给出的领域，回答的领域名称应与我给出领域的其中一个名称完全一致。' +
         "注意除回答可否归入已有知识库和领域名称外，不要有其余字符。";
 
+      // 调用知识库对话api
       $.ajax({
         url: "https://u8606i6360.vicp.fun/chat/knowledge_base_chat",
         type: "POST",
@@ -366,7 +344,7 @@ export default {
           console.log("知识库对话成功");
           conv_finish.value = true;
           ans.value = resp;
-          // 进行对返回字符串的解析
+          // 进行对返回字符串的解析 找到分类结果和分析来源在哪儿
           let i = 12;
           while (ans.value[i] !== '"') {
             i++;
@@ -391,6 +369,7 @@ export default {
       });
     };
 
+    // 分类完毕后从unknown库中删除当前文件
     const delete_file = () => {
       $.ajax({
         url: "https://u8606i6360.vicp.fun/knowledge_base/delete_docs",
@@ -404,34 +383,31 @@ export default {
         }),
         success: (resp) => {
           console.log(resp.msg);
-          router.push({ name: "home" })
+          router.push({ name: "home" });
         },
         error: (resp) => {
           console.log(resp);
-        }
+        },
       });
     };
 
     return {
       cls_ok,
-      file_attr,
       cnt,
-      get_data_bs_target,
-      get_id,
       new_channelName,
-      update_channelName,
       store,
-      update_user_data,
       name_ku,
       choice,
-      uploadFile,
       file,
-      getFile,
       ans,
       file_finish,
       file_success,
       conv_finish,
       conv_success,
+      get_data_bs_target,
+      get_id,
+      uploadFile,
+      getFile,
       conversation,
       delete_file,
     };

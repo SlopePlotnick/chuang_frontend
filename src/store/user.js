@@ -1,5 +1,4 @@
 import $ from "jquery";
-import { toRaw } from "vue";
 // import jwt_decode from "jwt-decode";
 
 const ModuleUser = {
@@ -9,10 +8,6 @@ const ModuleUser = {
       username: "",
       //这里为了测试拟造了数据
       data: [],
-      // photo: "",
-      // followerCount: 0,
-      // access: "",
-      // refresh: "",
       is_login: false,
     },
   },
@@ -31,100 +26,6 @@ const ModuleUser = {
       // state.access = user.access;
       // state.refresh = user.refresh;
       state.is_login = user.is_login;
-    },
-    //此处写法因为没有和后端统一测试所以存疑 需不需要加user
-    updateData: (state, attr) => {
-      let list = toRaw(state.user.data);
-      let is_in = false;
-      for (let cls of list) {
-        if (attr.channelName === cls.class_name) {
-          cls.passages.push({
-            id: cls.passages.length + 1,
-            title: attr.title,
-            content: attr.content,
-          });
-          is_in = true;
-          break;
-        }
-      }
-
-      //若结束循环依然没有加入 则创建新类
-      if (is_in === false) {
-        list.push({
-          class_name: attr.channelName,
-          id: list.length + 1,
-          passages: [
-            {
-              id: 1,
-              title: attr.title,
-              content: attr.content,
-            },
-          ],
-        });
-      }
-
-      state.data = list;
-      console.log(state.data);
-    },
-    updateKnowledge(state) {
-      // 调用api获取知识库名称列表
-      $.ajax({
-        url: "https://u8606i6360.vicp.fun/knowledge_base/list_knowledge_bases",
-        type: "GET",
-        success: (resp) => {
-          if (resp.msg === "success") {
-            let name_ku = resp.data;
-            let list = [];
-
-            for (let i = 0; i < name_ku.length; i++) {
-              let new_cls = {};
-              new_cls.class_name = name_ku[i];
-              new_cls.id = i;
-              new_cls.passages = [];
-
-              // 调用api获取该名称知识库中的文件列表
-              let get_file_url =
-                "https://u8606i6360.vicp.fun/knowledge_base/list_files?knowledge_base_name=" +
-                new_cls.class_name;
-              $.ajax({
-                url: get_file_url,
-                type: "GET",
-                success: (resp) => {
-                  if (resp.msg === "success") {
-                    let name_file = resp.data;
-
-                    for (let j = 0; j < name_file.length; j++) {
-                      let new_pas = {};
-                      new_pas.id = j;
-                      new_pas.title = name_file[j];
-                      new_pas.content = "暂不支持预览";
-
-                      new_cls.passages.push(new_pas);
-                    }
-
-                    console.log("获取知识库文件成功");
-                  } else {
-                    console.log("获取知识库文件失败");
-                  }
-                },
-                error: () => {
-                  console.log("获取知识库文件api访问失败");
-                },
-              });
-
-              list.push(new_cls);
-            }
-
-            state.data = list;
-            console.log("更新知识库信息成功");
-          } else {
-            console.log("更新知识库信息失败");
-          }
-        },
-        error: () => {
-          console.log("更新知识库信息api访问失败");
-        },
-      });
     },
     //此处将logout的逻辑写在了mutations中是因为该操作是同步的 且逻辑上相当于是对state的一次更新
     logout: (state) => {
