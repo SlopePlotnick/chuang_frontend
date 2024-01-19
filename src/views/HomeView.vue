@@ -42,7 +42,15 @@
           </div>
           <!-- 添加文件按钮 -->
           <div class="col-3" style="padding: 0">
-            <button @click="jumpToAdd" type="button" class="btn btn-light">
+            <button
+              type="button"
+              class="btn btn-light"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseAdd"
+              aria-expanded="false"
+              aria-controls="collapseAdd"
+              style="margin-right: 5px"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
@@ -60,6 +68,250 @@
               </svg>
             </button>
           </div>
+          <div style="margin-bottom: 10px" class="collapse" id="collapseAdd">
+            <div class="card card-body">
+              <button
+                @click="over_add_kb"
+                type="button"
+                class="btn btn-outline-primary"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseExample"
+                aria-expanded="false"
+                aria-controls="collapseExample"
+              >
+                创建知识库
+              </button>
+              <button
+                style="margin-top: 10px"
+                type="button"
+                class="btn btn-outline-primary"
+                @click="over_add_file"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseExample"
+                aria-expanded="false"
+                aria-controls="collapseExample"
+              >
+                上传文件
+              </button>
+              <div
+                style="margin-top: 10px"
+                class="collapse"
+                id="collapseExample"
+              >
+                <div
+                  v-if="add_kb_start === true"
+                  class="alert alert-warning"
+                  role="alert"
+                >
+                  <storng>知识库名称不支持英文！</storng>
+                </div>
+                <div v-if="add_kb_start === true" class="card card-body">
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="新建知识库名称"
+                      aria-label="新建知识库名称"
+                      aria-describedby="button-addon2"
+                      v-model="new_name"
+                    />
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      id="button-addon2"
+                      @click="create_knowledge_base"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseKu"
+                      aria-expanded="false"
+                      aria-controls="collapseKu"
+                    >
+                      确认
+                    </button>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+                    <symbol id="check-circle-fill" viewBox="0 0 16 16">
+                      <path
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                      />
+                    </symbol>
+                    <symbol id="info-fill" viewBox="0 0 16 16">
+                      <path
+                        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
+                      />
+                    </symbol>
+                    <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+                      <path
+                        d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
+                      />
+                    </symbol>
+                  </svg>
+                  <div class="collapse" id="collapseKu">
+                    <div
+                      v-if="ku_finish === false"
+                      class="alert alert-warning d-flex align-items-center"
+                      role="alert"
+                    >
+                      <svg
+                        width="20px"
+                        height="20px"
+                        class="bi flex-shrink-0 me-2"
+                        role="img"
+                        aria-label="Warning:"
+                      >
+                        <use xlink:href="#exclamation-triangle-fill" />
+                      </svg>
+                      <div>知识库创建中</div>
+                    </div>
+                    <div
+                      v-if="ku_success === false && ku_finish === true"
+                      class="alert alert-danger d-flex align-items-center"
+                      role="alert"
+                    >
+                      <svg
+                        width="20px"
+                        height="20px"
+                        class="bi flex-shrink-0 me-2"
+                        role="img"
+                        aria-label="Danger:"
+                      >
+                        <use xlink:href="#exclamation-triangle-fill" />
+                      </svg>
+                      <div>知识库创建失败</div>
+                    </div>
+                    <div
+                      v-if="ku_success === true && ku_finish === true"
+                      class="alert alert-success d-flex align-items-center"
+                      role="alert"
+                    >
+                      <svg
+                        width="20px"
+                        height="20px"
+                        class="bi flex-shrink-0 me-2"
+                        role="img"
+                        aria-label="Success:"
+                      >
+                        <use xlink:href="#check-circle-fill" />
+                      </svg>
+                      <div>知识库创建成功</div>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="add_file_start === true" class="card card-body">
+                  <form class="was-validated">
+                    <div class="mb-3">
+                      <select
+                        v-model="choice"
+                        class="form-select"
+                        required
+                        aria-label="select example"
+                      >
+                        <option value="">请选择要传输的文件</option>
+                        <option
+                          v-for="name in name_ku"
+                          :key="name.id"
+                          :value="name.id"
+                        >
+                          {{ name.class_name }}
+                        </option>
+                      </select>
+                      <div class="invalid-feedback">请选择知识库名称</div>
+                    </div>
+
+                    <div class="mb-3">
+                      <input
+                        type="file"
+                        class="form-control"
+                        aria-label="file example"
+                        @change="getFile"
+                        required
+                      />
+                      <div class="invalid-feedback">请选择要上传的文件</div>
+                    </div>
+                  </form>
+                  <div class="mb-3">
+                    <button
+                      @click="uploadFile"
+                      style="width: 100%"
+                      class="btn btn-primary"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseUpload"
+                      aria-expanded="false"
+                      aria-controls="collapseUpload"
+                    >
+                      上传
+                    </button>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+                    <symbol id="check-circle-fill" viewBox="0 0 16 16">
+                      <path
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                      />
+                    </symbol>
+                    <symbol id="info-fill" viewBox="0 0 16 16">
+                      <path
+                        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
+                      />
+                    </symbol>
+                    <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+                      <path
+                        d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
+                      />
+                    </symbol>
+                  </svg>
+                  <div class="collapse" id="collapseUpload">
+                    <div
+                      v-if="file_finish === false"
+                      class="alert alert-warning d-flex align-items-center"
+                      role="alert"
+                    >
+                      <svg
+                        width="20px"
+                        height="20px"
+                        class="bi flex-shrink-0 me-2"
+                        role="img"
+                        aria-label="Warning:"
+                      >
+                        <use xlink:href="#exclamation-triangle-fill" />
+                      </svg>
+                      <div>文件上传中</div>
+                    </div>
+                    <div
+                      v-if="file_success === false && file_finish === true"
+                      class="alert alert-danger d-flex align-items-center"
+                      role="alert"
+                    >
+                      <svg
+                        width="20px"
+                        height="20px"
+                        class="bi flex-shrink-0 me-2"
+                        role="img"
+                        aria-label="Danger:"
+                      >
+                        <use xlink:href="#exclamation-triangle-fill" />
+                      </svg>
+                      <div>文件上传失败</div>
+                    </div>
+                    <div
+                      v-if="file_success === true && file_finish === true"
+                      class="alert alert-success d-flex align-items-center"
+                      role="alert"
+                    >
+                      <svg
+                        width="20px"
+                        height="20px"
+                        class="bi flex-shrink-0 me-2"
+                        role="img"
+                        aria-label="Success:"
+                      >
+                        <use xlink:href="#check-circle-fill" />
+                      </svg>
+                      <div>文件上传成功</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- 索引栏 -->
         <!-- 未进入搜索状态 -->
@@ -70,7 +322,7 @@
             class="accordion"
             id="accordionPanelsStayOpenExample"
           >
-            <div class="accordion-item">
+            <div style="margin-bottom: 10px" class="accordion-item">
               <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                 <!-- 点击类名按钮时 触发display_all_pas事`件 更新当前在中栏展示的所有文章 -->
                 <button
@@ -187,12 +439,31 @@
           v-if="!(current_class_name === '')"
           class="alert alert-light"
           role="alert"
-          style="background-color: rgb(90, 130, 247); color: white"
+          style="
+            background-color: rgb(90, 130, 247);
+            color: white;
+            margin-bottom: 2px;
+          "
         >
           {{ current_class_name }}
         </div>
+        <button
+          style="width: 100%; margin-top: 2px"
+          v-if="!(current_class_name === '')"
+          type="button"
+          class="btn btn-danger"
+          @click="delete_kb"
+        >
+          删除知识库
+        </button>
         <div v-else class="tishi">点击左侧分类名称以预览该类文本</div>
-        <div v-for="pas in current_passages" :key="pas.id" class="list-group">
+        <hr />
+        <div
+          style="margin-top: 5px"
+          v-for="pas in current_passages"
+          :key="pas.id"
+          class="list-group"
+        >
           <a
             @click="display_one_pas(pas.id)"
             href="#"
@@ -299,7 +570,6 @@
 
 <script>
 import { reactive, ref } from "vue";
-import router from "../router/index";
 import { useStore } from "vuex";
 import $ from "jquery";
 
@@ -308,6 +578,8 @@ export default {
 
   setup: () => {
     let classifications = ref([]);
+    let name_ku = ref([]);
+    let new_name = ref("");
     const store = useStore();
     store.commit("updateKnowledge");
     // 直接从前端获取知识库信息
@@ -366,12 +638,45 @@ export default {
       },
     });
 
+    $.ajax({
+      url: "https://u8606i6360.vicp.fun/knowledge_base/list_knowledge_bases",
+      type: "GET",
+      success: (resp) => {
+        if (resp.msg === "success") {
+          for (let i = 0; i < resp.data.length; i++) {
+            let new_cls = {};
+            new_cls.id = i;
+            new_cls.class_name = resp.data[i];
+
+            name_ku.value.push(new_cls);
+          }
+          console.log("获取知识库名称列表成功");
+        } else {
+          console.log("获取知识库名称列表失败");
+        }
+      },
+      error: () => {
+        console.log("获取知识库名称列表api失败");
+      },
+    });
+
     // 当前类下所有的文章
     let current_passages = ref([]);
     // 当前所在的文章的类的id 数据类型是整型
     let current_class_id = ref();
     //当前所在类的名称
     let current_class_name = ref("");
+    // 是否进入添加状态
+    let add_kb_start = ref(false);
+    let add_file_start = ref(false);
+    let file = ref(null);
+    let choice = ref();
+    let file_finish = ref(false);
+    let file_success = ref(false);
+    let ku_finish = ref(false);
+    let ku_success = ref(false);
+    let de_ku_finish = ref(false);
+    let de_ku_success = ref(false);
 
     //展示某类下所有文章的事件 用id进行查找可以保证查找结果唯一
     const display_all_pas = (class_id) => {
@@ -414,10 +719,6 @@ export default {
 
       // console.log('当前one_passage为');
       // console.log(one_passage);
-    };
-
-    const jumpToAdd = () => {
-      router.push({ name: "addfile" });
     };
 
     const get_id = (cla_id) => {
@@ -465,6 +766,97 @@ export default {
       },
     ]);
 
+    const add_kb = () => {
+      add_kb_start.value = true;
+    };
+
+    const add_file = () => {
+      add_file_start.value = true;
+    };
+
+    const over_add_kb = () => {
+      add_kb_start.value = !add_kb_start.value;
+    };
+
+    const over_add_file = () => {
+      add_file_start.value = !add_file_start.value;
+    };
+
+    const getFile = (e) => {
+      file.value = e.target.files[0];
+    };
+
+    const create_knowledge_base = () => {
+      $.ajax({
+        url: "https://u8606i6360.vicp.fun/knowledge_base/create_knowledge_base",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          knowledge_base_name: new_name.value,
+          vector_store_type: "faiss",
+          embed_model: "m3e-base",
+        }),
+        success: (resp) => {
+          console.log("知识库创建成功");
+          console.log(resp.msg);
+          ku_finish.value = true;
+          ku_success.value = true;
+        },
+        error: (resp) => {
+          console.log("知识库创建失败");
+          console.log(resp);
+          ku_finish.value = true;
+          ku_success.value = false;
+        },
+      });
+    };
+
+    const uploadFile = () => {
+      let choice_ku = name_ku.value[choice.value].class_name;
+      console.log(choice_ku);
+      const obj = {
+        files: file.value,
+        knowledge_base_name: choice_ku,
+        override: false,
+        to_vector_store: true,
+        chunk_size: 250,
+        chunk_overlap: 50,
+        zh_title_enhance: false,
+        not_refresh_vs_cache: false,
+      };
+      let formData = new FormData();
+      for (const key in obj) {
+        formData.append(key, obj[key]);
+      }
+      // 调用上传文件的api
+      $.ajax({
+        url: "https://u8606i6360.vicp.fun/knowledge_base/upload_docs",
+        type: "POST",
+        Headers: {
+          "content-type": "multipart/form-data",
+        },
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: (resp) => {
+          console.log("文件上传成功");
+          console.log(resp.msg);
+          file_finish.value = true;
+          file_success.value = true;
+        },
+        error: (resp) => {
+          console.log("文件上传失败");
+          console.log(resp);
+          file_finish.value = true;
+          file_success.value = false;
+        },
+      });
+    };
+
+    const delete_kb = () => {
+
+    };
+
     return {
       classifications,
       current_passages,
@@ -472,7 +864,6 @@ export default {
       current_class_id,
       display_one_pas,
       one_passage,
-      jumpToAdd,
       get_id,
       get_data_bs_target,
       current_class_name,
@@ -480,6 +871,25 @@ export default {
       search,
       classifications_searching,
       unsearch,
+      add_kb,
+      add_kb_start,
+      add_file_start,
+      add_file,
+      over_add_kb,
+      over_add_file,
+      getFile,
+      choice,
+      name_ku,
+      uploadFile,
+      file_finish,
+      file_success,
+      create_knowledge_base,
+      new_name,
+      ku_finish,
+      ku_success,
+      delete_kb,
+      de_ku_finish,
+      de_ku_success,
     };
   },
 };

@@ -1,4 +1,4 @@
-<template>用户信息</template>
+<template>聊天界面</template>
 
 <script>
 export default {
