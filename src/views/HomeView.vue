@@ -426,22 +426,21 @@
           删除知识库
         </button>
         <!--        弹窗 警告用户是否删除-->
+        <!--        弹窗页面1-->
         <div
           class="modal fade"
           id="staticKu"
           data-bs-backdrop="static"
           data-bs-keyboard="false"
           tabindex="-1"
-          aria-labelledby="staticBackdropLabel"
+          aria-labelledby="staticKuLabel"
           aria-hidden="true"
         >
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <!--                弹窗标题-->
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                  Warning
-                </h1>
+                <h1 class="modal-title fs-5" id="staticKuLabel">Warning</h1>
                 <!--                关闭按钮-->
                 <button
                   type="button"
@@ -470,7 +469,44 @@
                   @click="delete_kb"
                   type="button"
                   class="btn btn-danger"
+                  data-bs-target="#staticKu2"
+                  data-bs-toggle="modal"
+                >
+                  确定
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--        弹窗页面2-->
+        <div
+          class="modal fade"
+          id="staticKu2"
+          aria-hidden="true"
+          aria-labelledby="staticKuLabel2"
+          tabindex="-1"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticKuLabel2">Warning</h1>
+                <button
+                  type="button"
+                  class="btn-close"
                   data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">页面将刷新供您检查结果</div>
+              <div class="modal-footer">
+                <!--                取消按钮-->
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  @click="refresh"
                 >
                   确定
                 </button>
@@ -538,6 +574,7 @@
 <script>
 import { reactive, ref } from "vue";
 import $ from "jquery";
+// import router from "../router/index";
 
 export default {
   name: "HomeView",
@@ -545,7 +582,7 @@ export default {
   setup: () => {
     // 存储知识库信息
     let classifications = ref([]);
-    // 存储知识库名称列表
+    // 存储知识库名称列表`
     let name_ku = ref([]);
     // 新建知识库名称
     let new_name = ref("");
@@ -824,6 +861,11 @@ export default {
       });
     };
 
+    // 刷新操作
+    const refresh = () => {
+      window.location.reload();
+    };
+
     return {
       classifications,
       current_passages,
@@ -856,6 +898,7 @@ export default {
       uploadFile,
       create_knowledge_base,
       delete_kb,
+      refresh,
     };
   },
 };
