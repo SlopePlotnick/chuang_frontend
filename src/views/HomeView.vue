@@ -1175,6 +1175,11 @@ export default {
 
     // 调用搜索api进行搜索
     const search = () => {
+      if (key_word.value === '' || name_ku.value[search_choice.value] === undefined) {
+        search_finish.value = true;
+        search_success.value = false;
+      }
+
       $.ajax({
         url: "https://u8606i6360.vicp.fun/knowledge_base/search_docs",
         type: "POST",
