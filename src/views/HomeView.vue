@@ -196,6 +196,14 @@
                   v-if="add_file_start === true && add_kb_start === false"
                   class="card card-body"
                 >
+<!--                  一个提示-->
+                  <div
+                      v-if="add_file_start === true"
+                      class="alert alert-warning"
+                      role="alert"
+                  >
+                    <storng>目前仅支持一次上传一份文件</storng>
+                  </div>
                   <!--                  表单本体-->
                   <form class="was-validated">
                     <div class="mb-3">
@@ -787,7 +795,7 @@
               <!--        重新搜索的按钮-->
               <button
                 @click="research"
-                style="width: 100%; margin-bottom: 5px;"
+                style="width: 100%; margin-bottom: 5px"
                 v-if="search_success === true"
                 type="button"
                 class="btn btn-outline-success"
