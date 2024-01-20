@@ -89,7 +89,10 @@
                 >
                   <storng>知识库名称不支持英文！</storng>
                 </div>
-                <div v-if="add_kb_start === true && add_file_start === false" class="card card-body">
+                <div
+                  v-if="add_kb_start === true && add_file_start === false"
+                  class="card card-body"
+                >
                   <!--                  表单本体-->
                   <div class="input-group mb-3">
                     <!--                    输入标签-->
@@ -189,7 +192,10 @@
                   </div>
                 </div>
                 <!--                上传文件组件-->
-                <div v-if="add_file_start === true && add_kb_start === false" class="card card-body">
+                <div
+                  v-if="add_file_start === true && add_kb_start === false"
+                  class="card card-body"
+                >
                   <!--                  表单本体-->
                   <form class="was-validated">
                     <div class="mb-3">
@@ -540,13 +546,13 @@
           </a>
         </div>
         <div
-            class="modal fade"
-            id="staticFile"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            tabindex="-1"
-            aria-labelledby="staticFileLabel"
-            aria-hidden="true"
+          class="modal fade"
+          id="staticFile"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabindex="-1"
+          aria-labelledby="staticFileLabel"
+          aria-hidden="true"
         >
           <div class="modal-dialog">
             <div class="modal-content">
@@ -555,34 +561,32 @@
                 <h1 class="modal-title fs-5" id="staticKuLabel">Warning</h1>
                 <!--                关闭按钮-->
                 <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
                 ></button>
               </div>
               <!--              提示信息-->
               <div class="modal-body">
-                您确定要删除该文件吗？该操作<strong
-              >不可撤销</strong
-              >
+                您确定要删除该文件吗？该操作<strong>不可撤销</strong>
               </div>
               <div class="modal-footer">
                 <!--                取消按钮-->
                 <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
                 >
                   取消
                 </button>
                 <!--                确定按钮-->
                 <button
-                    @click="delete_file"
-                    type="button"
-                    class="btn btn-danger"
-                    data-bs-target="#staticKu2"
-                    data-bs-toggle="modal"
+                  @click="delete_file"
+                  type="button"
+                  class="btn btn-danger"
+                  data-bs-target="#staticKu2"
+                  data-bs-toggle="modal"
                 >
                   确定
                 </button>
@@ -592,33 +596,33 @@
         </div>
         <!--        弹窗页面2-->
         <div
-            class="modal fade"
-            id="staticFile2"
-            aria-hidden="true"
-            aria-labelledby="staticFileLabel2"
-            tabindex="-1"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
+          class="modal fade"
+          id="staticFile2"
+          aria-hidden="true"
+          aria-labelledby="staticFileLabel2"
+          tabindex="-1"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
         >
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <h1 class="modal-title fs-5" id="staticKuLabel2">Warning</h1>
                 <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
                 ></button>
               </div>
               <div class="modal-body">页面将刷新供您检查结果</div>
               <div class="modal-footer">
                 <!--                取消按钮-->
                 <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                    @click="refresh"
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  @click="refresh"
                 >
                   确定
                 </button>
@@ -731,7 +735,7 @@
             <div style="margin-top: 5px" class="collapse" id="collapseSearch">
               <!--        检索中-->
               <div
-                v-if="search__finish === false"
+                v-if="search_finish === false"
                 class="alert alert-warning d-flex align-items-center"
                 role="alert"
               >
@@ -780,15 +784,23 @@
                 </svg>
                 <div>检索成功</div>
               </div>
+              <!--        重新搜索的按钮-->
+              <button
+                @click="research"
+                style="width: 100%; margin-bottom: 5px;"
+                v-if="search_success === true"
+                type="button"
+                class="btn btn-outline-success"
+              >
+                重新搜索
+              </button>
               <!--              展示搜索结果-->
               <div v-if="search_success === true && search_finish === true">
-                <ol
-                  v-for="ans in search_ans"
-                  :key="ans.id"
-                  class="list-group list-group-numbered"
-                >
+                <ol class="list-group list-group-numbered">
                   <li
-                    style="margin: 2.5px auto" class="list-group-item d-flex justify-content-between align-items-start"
+                    v-for="ans in search_ans"
+                    :key="ans.id"
+                    class="list-group-item d-flex justify-content-between align-items-start"
                   >
                     <div class="ms-2 me-auto">
                       <div class="fw-bold">{{ ans.metadata.source }}</div>
@@ -797,16 +809,6 @@
                   </li>
                 </ol>
               </div>
-              <!--        重新搜索的按钮-->
-              <button
-                @click="research"
-                style="width: 100%; margin-top: 5px;"
-                v-if="search_success === true"
-                type="button"
-                class="btn btn-outline-success"
-              >
-                重新搜索
-              </button>
             </div>
           </div>
         </div>
