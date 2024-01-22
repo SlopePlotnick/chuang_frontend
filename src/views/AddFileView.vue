@@ -322,9 +322,9 @@ export default {
 
       // 问题定义
       let question =
-        "当前知识库与什么领域有关？请在以下领域中选一个作答：" +
+        "当前知识库中的内容与什么领域相关性最强？你只能在以下领域中选一个相关性最强的作答：" +
         name_in_query +
-        "如果当前知识库与上述两个领域都无关，你认为该知识库可以被划分到什么领域？" +
+        "如果当前知识库与上述领域都无关，你认为该知识库可以被划分到什么领域？" +
         "回答时，直接给出被归入领域的名称。" +
         "注意回答中不要有多余字符。";
 
@@ -336,8 +336,9 @@ export default {
         data: JSON.stringify({
           query: question,
           knowledge_base_name: "unknown",
-          top_k: 3,
+          top_k: 10,
           score_threshold: 1,
+          history: [],
           stream: false,
           model_name: "Qwen-1.8B-Chat-Int4",
           temperature: 0.7,
@@ -346,21 +347,8 @@ export default {
         success: (resp) => {
           console.log("知识库对话成功");
           conv_finish.value = true;
-          ans.value = resp;
-          // 进行对返回字符串的解析 找到分类结果和分析来源在哪儿
-          let i = 12;
-          while (ans.value[i] !== '"') {
-            i++;
-          }
-          let j = i + 1;
-          while (ans.value[j] !== "[") {
-            j++;
-          }
-          ans.value =
-            "分类结果: " +
-            ans.value.slice(12, i) +
-            "分析来源: " +
-            ans.value.slice(j + 2, ans.value.length - 3);
+          let obj = JSON.parse(resp);
+          ans.value = obj.answer;
           conv_success.value = true;
         },
         error: (resp) => {

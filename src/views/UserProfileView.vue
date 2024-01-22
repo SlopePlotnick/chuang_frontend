@@ -159,8 +159,7 @@ export default {
   setup: () => {
     let classifications = ref([]);
     let con_model = ref("");
-    let conversation = reactive({
-    });
+    let conversation = reactive({});
     let question_exist = ref(false);
     let question = ref("");
 
@@ -198,29 +197,60 @@ export default {
 
     const question_up = () => {
       conversation.question = question.value;
-      $.ajax({
-        url: 'https://u8606i6360.vicp.fun/chat/chat',
-        type: 'POST',
-        contentType: "application/json",
-        data: JSON.stringify({
-          query: conversation.question,
-          stream: false,
-          model_name: "Qwen-1.8B-Chat-Int4",
-          temperature: 0.7,
-          prompt_name: "default",
-        }),
-        success: (resp) => {
-          console.log('对话成功');
-          let obj = JSON.parse(resp);
-          conversation.answer = obj.text;
-          question_exist.value = true;
-        },
-        error: (resp) => {
-          console.log('对话失败');
-          console.log(resp);
-          conversation.answer = resp;
-        },
-      });
+
+      if (con_model.value === "LLM模型") {
+        $.ajax({
+          url: "https://u8606i6360.vicp.fun/chat/chat",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            query: conversation.question,
+            stream: false,
+            model_name: "Qwen-1.8B-Chat-Int4",
+            temperature: 0.7,
+            prompt_name: "default",
+          }),
+          success: (resp) => {
+            console.log("对话成功");
+            let obj = JSON.parse(resp);
+            conversation.answer = obj.text;
+            question_exist.value = true;
+          },
+          error: (resp) => {
+            console.log("对话失败");
+            console.log(resp);
+            conversation.answer = resp;
+          },
+        });
+      } else {
+        $.ajax({
+          url: "https://u8606i6360.vicp.fun/chat/knowledge_base_chat",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            query: conversation.question,
+            knowledge_base_name: con_model.value,
+            top_k: 10,
+            score_threshold: 1,
+            stream: false,
+            model_name: "Qwen-1.8B-Chat-Int4",
+            temperature: 0.7,
+            prompt_name: "default",
+          }),
+          success: (resp) => {
+            console.log("对话成功");
+            let obj = JSON.parse(resp);
+            conversation.answer = obj.answer;
+            console.log(obj.docs);
+            question_exist.value = true;
+          },
+          error: (resp) => {
+            console.log('对话失败');
+            console.log(resp);
+            conversation.answer = resp;
+          }
+        });
+      }
     };
 
     return {
