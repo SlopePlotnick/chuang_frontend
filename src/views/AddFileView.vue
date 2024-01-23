@@ -328,6 +328,10 @@ export default {
         "回答时，直接给出被归入领域的名称。" +
         "注意回答中不要有多余字符。";
 
+      // // 问题定义
+      // let question =
+      //     "当前知识库中的内容与什么领域相关性最强？";
+
       // 调用知识库对话api
       $.ajax({
         url: "https://u8606i6360.vicp.fun/chat/knowledge_base_chat",

@@ -87,7 +87,7 @@
                   class="alert alert-warning"
                   role="alert"
                 >
-                  <storng>知识库名称不支持英文！</storng>
+                  <storng>知识库名称不支持中文！</storng>
                 </div>
                 <div
                   v-if="add_kb_start === true && add_file_start === false"
